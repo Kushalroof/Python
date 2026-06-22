@@ -241,6 +241,48 @@ prediction = model.predict(new_sample)
 print('Prediction:', 'Benign' if prediction[0] == 0 else 'Malignant')
 
 999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.datasets import fetch_olivetti_faces
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score, classification_report
+
+data = fetch_olivetti_faces()
+
+images = data.images
+X = data.data
+y = data.target
+
+fig, axes = plt.subplots(2, 5, figsize=(10, 5))
+fig.suptitle('Sample Faces from Olivetti Dataset')
+for i, ax in enumerate(axes.flat):
+    ax.imshow(images[i], cmap='gray')
+    ax.set_title(f'Person: {y[i]}')
+    ax.axis('off')
+plt.tight_layout()
+plt.show()
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, stratify=y, random_state=42
+)
+
+model = GaussianNB()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+print(f'Accuracy: {accuracy_score(y_test, y_pred):.2f}')
+print(classification_report(y_test, y_pred))
+
+fig, axes = plt.subplots(2, 5, figsize=(10, 5))
+fig.suptitle('Predicted vs Actual')
+for i, ax in enumerate(axes.flat):
+    ax.imshow(X_test[i].reshape(64, 64), cmap='gray')
+    color = 'green' if y_pred[i] == y_test[i] else 'red'
+    ax.set_title(f'P:{y_pred[i]} A:{y_test[i]}', color=color)
+    ax.axis('off')
+plt.tight_layout()
+plt.show()
 
 1010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101
 import matplotlib.pyplot as plt
